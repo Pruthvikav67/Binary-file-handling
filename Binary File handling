@@ -1,0 +1,162 @@
+import pickle
+
+def MainMenu():
+    print("-------------------------------------------------")    
+    print("1. Write data in binary file.")
+    print("2. Read data from binary file.")
+    print("3. Append data in file.")
+    print("4. Search in file")
+    print('5. Update data in file')
+    print('6. Delete data from file')
+    print('7. Exit ')
+    print("-------------------------------------------------") 
+    
+while True:
+    MainMenu()
+    ch=int(input("Enter your choice : "))
+    if ch==1:
+        write()
+    elif ch==2:
+        read()
+    elif ch==3:
+        append()
+    elif ch==4:
+        search()
+    elif ch==5:
+        update()
+    elif ch==6:
+        delete()
+    elif ch==7:
+        break
+            
+
+def write():
+    print('Write data')
+    f=open('D:/Python/Binary_file_handling.txt', 'wb')
+    record=[]
+    while True:
+        rno=int(input("Roll no: "))
+        name=input('Name: ')
+        marks=int(input('Marks optained: '))
+        data = [rno,name,marks]
+        record.append(data)
+        ch=input('More entry ? (y/n) : ')
+        if ch in 'Nn':
+            break
+    pickle.dump(record,f)
+    print('Record added')
+    f.close()
+        
+def read():
+    print("Read function is called")
+    f=open('D:/Python/Binary_file_handling.txt', 'rb')
+    try:
+        while True:
+            s=pickle.load(f)
+            for i in s:
+                print(i)
+    except Exception as e:
+        print(e)
+    f.close()
+
+def append():
+    print('Append data function is called')
+    read()
+    f=open('D:/Python/Binary_file_handling.txt', 'rb+')
+    Rec=pickle.load(f)
+    try:
+        while True:
+            rno=int(input("Roll no: "))
+            name=input('Name: ')
+            marks=int(input('Marks optained: '))
+            data = [rno,name,marks]
+            Rec.append(data)
+            ch=input('More entry ? (y/n) : ')
+            if ch in 'Nn':
+                break
+    except Exception as e:
+        print(e)
+    f.seek(0)
+    pickle.dump(Rec,f)
+    print('Record appended')
+    f.close()
+    read()
+    
+def search():
+    print('Search function is called')
+    f=open('D:/Python/Binary_file_handling.txt', 'rb')
+    
+    rno = int(input("Enter roll no whom you want details : "))
+    found = 0
+    try:
+        while True:
+            s=pickle.load(f)
+            for i in s:
+                if i[0]==rno:
+                    print(i)
+                    print('Found the details') 
+                    found=1
+                    break
+            
+            if found == 0:
+                print('Mentioned Roll no is not specified')
+    except Exception as e:
+        print(e)
+    f.seek(0)
+    f.close()
+
+def update():
+    print('Update function is called')
+    read()
+    f=open('D:/Python/Binary_file_handling.txt', 'rb+')
+    rno = int(input("Enter roll no whom you want to update : "))
+    f.seek(0)
+    found = 0
+    try:
+        while True:
+            rpos = f.tell()
+            s=pickle.load(f)
+            for i in s:
+                if i[0]==rno:
+                    print('Current name is : ', i[1])
+                    i[1] = input('Enter the new Name : ') 
+                    found=1
+                    break
+            
+            if found == 0:
+                print('Mentioned Roll no is not specified')
+            else:
+                f.seek(0)
+                pickle.dump(s,f)
+    except Exception as e:
+        print(e)
+    f.close()
+    read()
+    
+def delete():
+    print('Delete function is called\n')
+    read()
+    f=open('D:/Python/Binary_file_handling.txt', 'rb+')
+    rno = int(input("Enter roll no whom you want to delete : "))
+    f.seek(0)
+    found = 0
+    try:
+        while True:
+            rpos = f.tell()
+            s=pickle.load(f)
+            for i in s:
+                if i[0]==rno:
+                    print('Current detail is : ', i)
+                    s.remove(i) 
+                    found=1
+                    break
+            
+            if found == 0:
+                print('Mentioned Roll no is not specified')
+            else:
+                f.seek(0)
+                pickle.dump(s,f)
+    except Exception as e:
+        print(e)
+    f.close()
+    read()
